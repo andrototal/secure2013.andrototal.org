@@ -65,31 +65,43 @@
 
             <a href="http://polimi.it">Politecnico di Milano</a>, <a href="http://www.deib.polimi.it">DEIB</a>
 
+            <a href="mailto:fede@maggi.cc">fede@maggi.cc</a>
+
             <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Android is Popular
+            ### Roadmap
 
+            1. Security threats and protections
 
-              * <a href="http://www.engadget.com/2013/04/16/eric-schmidt-google-now-at-1-5-million-android-activations-per/">1.5+ million device activations</a> per day
-              * <a href="http://en.wikipedia.org/wiki/Google_Play#Applications">800,000 apps</a> (40+ billion downloads) in Google Play
-              * 33 <a href="http://androidmarkets.com/">unofficial marketplaces</a>
+            1. Limitations
 
+            1. Evaluating antimalware
+
+            1. AndroTotal
+
+            1. Status
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Many Users + Homogeneous, Open World = Attractive
+            ## 1. Security threats and protections
+          </script>
+        </section>
 
-            <div class="fragments">
-              <img width="75%" src="img/attractive.png" />
+        <section data-markdown>
+          <script type="text/template">
+            ### Android Facts
 
-              http://mcafee.com/us/security-awareness/articles/mobile-malware-growth-continuing-2013.aspx
-            </div>
+            * Android is the most popular mobile platform
+
+            * Rich marketplaces stocked with apps
+
+            * Very attractive target for attackers
           </script>
         </section>
 
@@ -107,7 +119,7 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Malicious Apps: Main Goals
+            ### Attackers Goals
 
             <ul>
               <li class="fragments">Steal sensitive data (intercept texts or calls)</li>
@@ -119,19 +131,11 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Android Architecture
-
-            <img width="50%" src="img/android.png" />
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
             ### Android Security Approach
 
             <ul>
             <li class="fragments">"Proprietary" JVM (Dalvik) runtime environment</li>
-            <li class="fragments">One Dalvik process per app (APK), which actually translates the bytecode into native machine instruction (e.g., ARM)</li>
+            <li class="fragments">One Dalvik process per app (APK), which translates bytecode into machine code (e.g., ARM)</li>
             <li class="fragments">Isolated processes with distinct `uid`, `gid`</li>
             <li class="fragments">"Sensitive" operations require permissions</li>
             </li>
@@ -150,35 +154,7 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Malware Limitations
-
-            <ul>
-            <li class="fragments">Classic malware approaches do not apply</li>
-            <li class="fragments">Example: Memory errors cannot be exploited</li>
-            <li class="fragments">Workarounds:
-
-              <ul>
-                <li class="fragments">Social engineering</li>
-                <li class="fragments">Phishing</li>
-                <li class="fragments">...</li>
-                <li class="fragments">...any other mean to have an arbitrary app installed.</li>
-              </ul>
-
-            </li>
-            </ul>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Malware State of the Art (example)
-
-            <ol>
-              <li class="fragments">Distribute a "benign" app on marketplaces</li>
-              <li class="fragments">The "benign" app downloads a malicious component</li>
-              <li class="fragments">Attempt to escalate privileges</li>
-              <li class="fragments">Perform malicious actions</li>
-            </ol>
+            ## 2. Limitations
           </script>
         </section>
 
@@ -190,6 +166,8 @@
             <li class="fragments">Cannot collect runtime info from running processes</li>
             <li class="fragments">Workarounds:
               <ul>
+                <li class="fragments">Signature-based matching</li>
+
                 <li class="fragments">Custom kernel (e.g., intercept syscalls)</li>
                 <li class="fragments">Root the device and increase the antimalware's privileges</li>
               </ul>
@@ -201,13 +179,41 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Antimalware State of the Art
+            ### Malware Limitations
 
-            <ol>
-            <li class="fragments">Subscribe to "app installed" event</li>
-            <li class="fragments">Match the app name or bytecode against signatures of known malicious code</li>
-            <li class="fragments">Scan the external SD storage</li>
-            </ol>
+            <ul>
+            <li class="fragments">Classic malware approaches do not apply</li>
+            <li class="fragments">Example: Memory errors cannot be exploited</li>
+            <li class="fragments">Workarounds:
+
+              <ul>
+                <li class="fragments">Social engineering</li>
+                <li class="fragments">Phishing</li>
+                <li class="fragments">Antimalware evasion</li>
+              </ul>
+
+            </li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Evading Antimalware
+
+            #### repackaging, obfuscation, encryption
+
+            <img width="80%" src="img/many-variants.png" />
+
+            http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## 3. Evaluating antimalware
+
+            #### Measuring their resilience to evasion
           </script>
         </section>
 
@@ -225,63 +231,13 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Counteracting Signatures: Growth of Variants
-
-            <img src="img/many-variants.png" />
-
-            http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview.pdf
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Creating Variants
-
-            * _repackaging_ (e.g., popular, benign apps with malicious code)
-
-            * _obfuscation_
-
-            * _encryption_
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Research Directions
-
-            <ul>
-            <li class="fragments">Program analysis
-              <ul>
-              <li class="fragments">Static code or permissions analysis</li>
-              <li class="fragments">Collection of runtime events (e.g., VM introspection, syscall tracing)</li>
-              <li class="fragments">Code coverage (mobile apps are highly interactive!)</li>
-              </ul>
-            </li>
-
-            <li class="fragments">Detection: learn (and find violations of) execution profiles</li>
-            <li class="fragments">Protection: code signing (hard: dynamic compilation)</li>
-            <li class="fragments">Evaluation: stress testing of antimalware products</li>
-            </ul>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            # Evaluation
-
-            ## Measuring Signatures Generality to Code Mutations
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Workflow
+            ### How to measure their effectiveness?
 
             <ol>
-              <li class="fragments">Obtain M samples of known malware</li>
-              <li class="fragments">Apply T transformations to each sample</li>
-              <li class="fragments">Analyze with P x V antimalware products and versions</li>
-              <li class="fragments">For each of the A Android versions</li>
+              <li class="fragments">Obtain <strong>M</strong> samples of known malware</li>
+              <li class="fragments">Apply <strong>T</strong> transformations to each sample</li>
+              <li class="fragments">Analyze with <strong>P</strong> x <strong>V</strong> antimalware products and versions</li>
+              <li class="fragments">Repeat for each of the <strong>A</strong> Android versions</li>
             </ol>
           </script>
         </section>
@@ -357,9 +313,11 @@
 
         <section data-markdown>
           <script type="text/template">
-            http://andrototal.org
+            ## 3. AndroTotal
 
             <img src="img/andrototal_logo.png" style="background: white !important;" />
+
+            http://andrototal.org
           </script>
         </section>
 
@@ -369,22 +327,22 @@
               ## AndroTotal
 
               <ul>
-              <li class="fragments">SDK for writing UI tests/scrapers</li>
-              <li class="fragments">Pluggable adapters for each antimalware</li>
-              <li class="fragments">Configurable tests</li>
-              <li class="fragments">Task queues with easily deployable workers</li>
-              <li class="fragments">Collect screenshot, logcat, and network dump</li>
+                <li class="fragments">SDK for writing UI tests/scrapers</li>
+                <li class="fragments">Pluggable adapters for each antimalware</li>
+                <li class="fragments">Configurable tests</li>
+                <li class="fragments">Task queues with distributed workers</li>
               </ul>
             </script>
           </section>
 
           <section data-markdown>
             <script type="text/template">
+              ## Characteristics
               <ul>
                 <li class="fragments">Web frontend for humans</li>
                 <li class="fragments">JSON/REST API for machines</li>
                 <li class="fragments">Pluggable code-mutation modules</li>
-                <li class="fragments">Portable to physical devices</li>
+                <li class="fragments">Works on both emulators and physical devices</li>
               </ul>
             </script>
           </section>
@@ -416,7 +374,7 @@
 
             <ul>
               <li class="fragments">Web frontend</li>
-              <li class="fragments">Android emulator images repository</li>
+              <li class="fragments">Repository of clean Android images</li>
               <li class="fragments">Asynchronous task dispatcher</li>
               <li class="fragments">Distributed workers</li>
             </ul>
@@ -427,8 +385,8 @@
           <script type="text/template">
             ### Workflow
 
-            <ul>
-              <li class="fragments">Submit a suspicious APK</li>
+            <ol>
+              <li class="fragments">Retrieve a suspicious APK</li>
 
               <li class="fragments">Choose parameters
 
@@ -439,7 +397,7 @@
 
               </li>
 
-              <li class="fragments">Retrieve image(s) from repository</li>
+              <li class="fragments">Pull clean image(s) from repository</li>
               <li class="fragments">Instantiate one test per combination of
 
                 <ul>
@@ -450,7 +408,7 @@
               </li>
 
               <li class="fragments">Enqueue test instances</li>
-            </ul>
+            </ol>
           </script>
         </section>
 
@@ -511,6 +469,12 @@ def on_demand_detection(self, sample_path):
 
         <section data-markdown>
           <script type="text/template">
+            ## 5. Status
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             ### Numbers
 
             * 455 users subscribed in less than a month
@@ -522,12 +486,12 @@ def on_demand_detection(self, sample_path):
 
         <section data-markdown>
           <script type="text/template">
-            ### TODO
+            ### TODOs
 
             <ul>
               <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
               <li class="fragments">Incorporate code-mutation modules</li>
-              <li class="fragments">Add more cores</li>
+              <li class="fragments">Add more cores and scale</li>
               <li class="fragments">Finish the API (only sample-sharing is supported as of now)</li>
               <li class="fragments">Deploy on ARM boards and monitor power consumption</li>
             </ul>
@@ -544,10 +508,34 @@ def on_demand_detection(self, sample_path):
 
             Try it now at <a href="http://andrototal.org">andrototal.org</a>!
 
+            <a href="mailto:fede@maggi.cc">fede@maggi.cc</a>
+
             <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
           </script>
         </section>
 
+        <section data-markdown>
+          <script type="text/template">
+            ## Extra Slides
+          </script>
+        </section>
+
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Android Architecture
+
+            <img width="50%" src="img/android.png" />
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Android Popularity
+
+            <img width="50%" src="img/android-stats.png" />
+          </script>
+        </section>
 
       </div>
     </div>
