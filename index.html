@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>AndroTotal: A Scalable Framework for Android Antivirus Testing</title>
+
+    <meta name="description" content="A Scalable Framework for Android Antivirus Testing">
+    <meta name="author" content="Andrea Valdi, Federico Maggi, Stefano Zanero">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/solarized_dark.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write('<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <style type="text/css" media="screen,print">
+      strike {
+        position: relative;
+        opacity: 0.5;
+      }
+
+      strike::after {
+        border-bottom: 5px solid red;
+        content: "";
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 50%;
+      }
+
+      img.logo {
+        height: 80px;
+        background: white !important;
+      }
+    </style>
+
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown>
+          <script type="text/template">
+            # AndroTotal
+            ## A Scalable Framework for Android
+            ## Antimalware Testing
+
+            <a href="http://andreavaldi.org">Andrea Valdi</a>, <a href="http://maggi.cc"><strong>Federico Maggi</strong></a>, <a href="http://zanero.org">Stefano Zanero</a>
+
+            <a href="http://polimi.it">Politecnico di Milano</a>, <a href="http://www.deib.polimi.it">DEIB</a>
+
+            <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Android is Popular
+
+
+              * <a href="http://www.engadget.com/2013/04/16/eric-schmidt-google-now-at-1-5-million-android-activations-per/">1.5+ million device activations</a> per day
+              * <a href="http://en.wikipedia.org/wiki/Google_Play#Applications">800,000 apps</a> (40+ billion downloads) in Google Play
+              * 33 <a href="http://androidmarkets.com/">unofficial marketplaces</a>
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Many Users + Homogeneous, Open World = Attractive
+
+            <div class="fragments">
+              <img width="75%" src="img/attractive.png" />
+
+              http://mcafee.com/us/security-awareness/articles/mobile-malware-growth-continuing-2013.aspx
+            </div>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Growth of Malicious Apps
+
+            <div class="fragments">
+              <img width="70%" src="img/malware-growth.jpg" />
+
+              http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
+              </div>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Malicious Apps: Main Goals
+
+            <ul>
+              <li class="fragments">Steal sensitive data (intercept texts or calls)</li>
+              <li class="fragments">Turn devices into bots (perform malicious actions)</li>
+              <li class="fragments">Financial gain (call or text premium numbers)</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Android Architecture
+
+            <img width="50%" src="img/android.png" />
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Android Security Approach
+
+            <ul>
+            <li class="fragments">"Proprietary" JVM (Dalvik) runtime environment</li>
+            <li class="fragments">One Dalvik process per app (APK), which actually translates the bytecode into native machine instruction (e.g., ARM)</li>
+            <li class="fragments">Isolated processes with distinct `uid`, `gid`</li>
+            <li class="fragments">"Sensitive" operations require permissions</li>
+            </li>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Simple Consequence
+
+            An app cannot mangle
+
+            with another app's memory or filesystem.
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Malware Limitations
+
+            <ul>
+            <li class="fragments">Classic malware approaches do not apply</li>
+            <li class="fragments">Example: Memory errors cannot be exploited</li>
+            <li class="fragments">Workarounds:
+
+              <ul>
+                <li class="fragments">Social engineering</li>
+                <li class="fragments">Phishing</li>
+                <li class="fragments">...</li>
+                <li class="fragments">...any other mean to have an arbitrary app installed.</li>
+              </ul>
+
+            </li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Malware State of the Art (example)
+
+            <ol>
+              <li class="fragments">Distribute a "benign" app on marketplaces</li>
+              <li class="fragments">The "benign" app downloads a malicious component</li>
+              <li class="fragments">Attempt to escalate privileges</li>
+              <li class="fragments">Perform malicious actions</li>
+            </ol>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Antimalware Limitations
+
+            <ul>
+            <li class="fragments">Cannot collect runtime info from running processes</li>
+            <li class="fragments">Workarounds:
+              <ul>
+                <li class="fragments">Custom kernel (e.g., intercept syscalls)</li>
+                <li class="fragments">Root the device and increase the antimalware's privileges</li>
+              </ul>
+
+            </li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Antimalware State of the Art
+
+            <ol>
+            <li class="fragments">Subscribe to "app installed" event</li>
+            <li class="fragments">Match the app name or bytecode against signatures of known malicious code</li>
+            <li class="fragments">Scan the external SD storage</li>
+            </ol>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Antimalware Products
+
+            <ul>
+              <li class="fragments">We count about 100 (free) antimalware products</li>
+              <li class="fragments">They are all based on _signature matching_</li>
+              <li class="fragments">Some provide extras if granted root privileges</li>
+            </ol>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Counteracting Signatures: Growth of Variants
+
+            <img src="img/many-variants.png" />
+
+            http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview.pdf
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Creating Variants
+
+            * _repackaging_ (e.g., popular, benign apps with malicious code)
+
+            * _obfuscation_
+
+            * _encryption_
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Research Directions
+
+            <ul>
+            <li class="fragments">Program analysis
+              <ul>
+              <li class="fragments">Static code or permissions analysis</li>
+              <li class="fragments">Collection of runtime events (e.g., VM introspection, syscall tracing)</li>
+              <li class="fragments">Code coverage (mobile apps are highly interactive!)</li>
+              </ul>
+            </li>
+
+            <li class="fragments">Detection: learn (and find violations of) execution profiles</li>
+            <li class="fragments">Protection: code signing (hard: dynamic compilation)</li>
+            <li class="fragments">Evaluation: stress testing of antimalware products</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            # Evaluation
+
+            ## Measuring Signatures Generality to Code Mutations
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Workflow
+
+            <ol>
+              <li class="fragments">Obtain M samples of known malware</li>
+              <li class="fragments">Apply T transformations to each sample</li>
+              <li class="fragments">Analyze with P x V antimalware products and versions</li>
+              <li class="fragments">For each of the A Android versions</li>
+            </ol>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Numbers
+
+            <ul>
+              <li class="fragments">M = 1,000 (very conservative)</li>
+              <li class="fragments">T = 3 (obfuscation, encryption, repackaging)</li>
+              <li class="fragments">P = 100</li>
+              <li class="fragments">V = 2 (simple example)</li>
+              <li class="fragments">A = 3 (2.3, 4.1, 4.2)</li>
+            </ul>
+
+            <br />
+
+            <h3 class="fragments">1,000 x 3 x 100 x 2 x 3 = 1,800,000 tests</h3>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Challenges
+
+            <ul>
+              <li class="fragments">Some parallelization is required ("just" engineering)</li>
+              <li class="fragments">Android antimalware products are UI driven</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### State of the Art
+
+            <ul>
+            <li class="fragments">H. Pilz, <em>"Building a test environment for Android anti-malware tests,"</em> VB Conf.'12</li>
+
+              <ul>
+                <li class="fragments">Human oracle is needed</li>
+              </ul>
+
+            <li class="fragments">M. Zheng, P. P. C. Lee, and J. C. S. Lui, <em>"ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems,"</em> DIMVA'12</li>
+
+              <ul>
+                <li class="fragments">Focus on transformation, uses VirusTotal.com</li>
+              </ul>
+
+            <li class="fragments">V. Rastogi, Y. Chen, and X. Jiang, <em>"DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks,"</em> AsiaCCS'13</li>
+
+              <ul>
+                <li class="fragments">Focus on transformation, uses custom scripts</li>
+              </ul>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Lack of Automation Tools
+
+            <h3 class="fragments">VirusTotal</h3>
+
+            <ul>
+              <li class="fragments">Relies on command-line, desktop-based AVs with signatures for Android</li>
+              <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
+              <li class="fragments">No versioning support</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            http://andrototal.org
+
+            <img src="img/andrototal_logo.png" style="background: white !important;" />
+          </script>
+        </section>
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              ## AndroTotal
+
+              <ul>
+              <li class="fragments">SDK for writing UI tests/scrapers</li>
+              <li class="fragments">Pluggable adapters for each antimalware</li>
+              <li class="fragments">Configurable tests</li>
+              <li class="fragments">Task queues with easily deployable workers</li>
+              <li class="fragments">Collect screenshot, logcat, and network dump</li>
+              </ul>
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              <ul>
+                <li class="fragments">Web frontend for humans</li>
+                <li class="fragments">JSON/REST API for machines</li>
+                <li class="fragments">Pluggable code-mutation modules</li>
+                <li class="fragments">Portable to physical devices</li>
+              </ul>
+            </script>
+          </section>
+        </section>
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              ![AndroTotal Screenshot](img/andrototal-web-0.png)
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ![AndroTotal Screenshot](img/andrototal-web-1.png)
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ![AndroTotal Screenshot](img/andrototal-web-2.png)
+            </script>
+          </section>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Architecture
+
+            <ul>
+              <li class="fragments">Web frontend</li>
+              <li class="fragments">Android emulator images repository</li>
+              <li class="fragments">Asynchronous task dispatcher</li>
+              <li class="fragments">Distributed workers</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Workflow
+
+            <ul>
+              <li class="fragments">Submit a suspicious APK</li>
+
+              <li class="fragments">Choose parameters
+
+                <ul>
+                  <li>Android version(s)</li>
+                  <li>List of antimalware product and versions</li>
+                </ul>
+
+              </li>
+
+              <li class="fragments">Retrieve image(s) from repository</li>
+              <li class="fragments">Instantiate one test per combination of
+
+                <ul>
+                  <li>Android version</li>
+                  <li>Product version</li>
+                </ul>
+
+              </li>
+
+              <li class="fragments">Enqueue test instances</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Writing tests <strike>is</strike> was tedious
+
+            We have abstracted away the low level details, so that
+
+            we can focus on the important things: _extracting the results_.
+          </script>
+        </section>
+
+        <section>
+          <section>
+            <h3>Test Recipe (on-install detection)</h3>
+<pre><code class="python">#andrototal-adapters/ComZonerAndroidAntivirus.py
+class TestSuite(base.BaseTestSuite):
+  def on_install_detection(self, sample_path):
+    self.pilot.install_package(sample_path)
+
+    if self.pilot.wait_for_activity(
+        "com.zoner.android.antivirus_common.ActScanResults", 10):
+
+      result = self.pilot.get_view_by_id("scaninfected_row_virus")
+    else:
+      result = False</code></pre>
+          </section>
+
+          <section>
+            <h3>Test Recipe (on-demand detection)</h3>
+<pre><code class="python">#...
+def on_demand_detection(self, sample_path):
+  self.pilot.install_package(sample_path)
+  self.pilot.start_activity("com.zoner.android.antivirus", ".ActMain")
+  self.pilot.wait_for_activity("com.zoner.android.antivirus.ActMain")
+
+  self.pilot.tap_on_coordinates(120, 130)
+  self.pilot.wait_for_activity("com.zoner.android.antivirus.ActMalware")
+
+  # start scan
+  self.pilot.tap_on_coordinates(120, 80)
+  self.pilot.wait_for_activity(
+    "com.zoner.android.antivirus_common.ActScanResults")
+
+  self.pilot.refre dsh()
+# ...</code></pre>
+          </section>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Scalability
+
+            <img class="fragments" src="img/scalability.png" width="75%" />
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Numbers
+
+            * 455 users subscribed in less than a month
+            * 13 antimalware vendors supported (not all public)
+            * 16 products overall (not all public)
+            * 1,465 distinct samples submitted so far
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### TODO
+
+            <ul>
+              <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
+              <li class="fragments">Incorporate code-mutation modules</li>
+              <li class="fragments">Add more cores</li>
+              <li class="fragments">Finish the API (only sample-sharing is supported as of now)</li>
+              <li class="fragments">Deploy on ARM boards and monitor power consumption</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img class="logo" src="img/andrototal_logo.png" class="" alt="" />
+
+            ## Thank you!
+
+            # Questions?
+
+            Try it now at <a href="http://andrototal.org">andrototal.org</a>!
+
+            <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
+          </script>
+        </section>
+
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+      });
+    </script>
+  </body>
+</html>
