@@ -90,6 +90,14 @@
         <section data-markdown>
           <script type="text/template">
             ## 1. Security threats and protections
+
+            #### 2. Limitations
+
+            #### 3. Evaluating antimalware
+
+            #### 4. AndroTotal
+
+            #### 5. Status
           </script>
         </section>
 
@@ -109,7 +117,7 @@
           <script type="text/template">
             ### Growth of Malicious Apps
 
-            <div class="fragments">
+            <div class="fragment">
               <img width="70%" src="img/malware-growth.jpg" />
 
               http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
@@ -121,7 +129,7 @@
           <script type="text/template">
             ### Attackers Goals
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">Steal sensitive data (intercept texts or calls)</li>
               <li class="fragments">Turn devices into bots (perform malicious actions)</li>
               <li class="fragments">Financial gain (call or text premium numbers)</li>
@@ -133,7 +141,7 @@
           <script type="text/template">
             ### Android Security Approach
 
-            <ul>
+            <ul class="fragment">
             <li class="fragments">"Proprietary" JVM (Dalvik) runtime environment</li>
             <li class="fragments">One Dalvik process per app (APK), which translates bytecode into machine code (e.g., ARM)</li>
             <li class="fragments">Isolated processes with distinct `uid`, `gid`</li>
@@ -144,9 +152,17 @@
 
         <section data-markdown>
           <script type="text/template">
-            ## Simple Consequence
+            ### Android Architecture
 
-            An app cannot mangle
+            <img width="50%" src="img/android.png" />
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Consequence
+
+            An app (process) cannot interfere
 
             with another app's memory or filesystem.
           </script>
@@ -154,7 +170,15 @@
 
         <section data-markdown>
           <script type="text/template">
+            #### 1. Security threats and protections
+
             ## 2. Limitations
+
+            #### 3. Evaluating antimalware
+
+            #### 4. AndroTotal
+
+            #### 5. Status
           </script>
         </section>
 
@@ -162,8 +186,8 @@
           <script type="text/template">
             ### Antimalware Limitations
 
-            <ul>
-            <li class="fragments">Cannot collect runtime info from running processes</li>
+            <ul class="fragment">
+            <li class="fragments">Cannot observe running processes</li>
             <li class="fragments">Workarounds:
               <ul>
                 <li class="fragments">Signature-based matching</li>
@@ -181,7 +205,7 @@
           <script type="text/template">
             ### Malware Limitations
 
-            <ul>
+            <ul class="fragment">
             <li class="fragments">Classic malware approaches do not apply</li>
             <li class="fragments">Example: Memory errors cannot be exploited</li>
             <li class="fragments">Workarounds:
@@ -201,19 +225,27 @@
           <script type="text/template">
             ### Evading Antimalware
 
-            #### repackaging, obfuscation, encryption
+            <h4 class="fragment">repackaging, obfuscation, encryption</h4>
 
+            <div class="fragment">
             <img width="80%" src="img/many-variants.png" />
 
-            http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview
+            <p>http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview</p>
+            </div>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
+            #### 1. Security threats and protections
+
+            #### 2. Limitations
+
             ## 3. Evaluating antimalware
 
-            #### Measuring their resilience to evasion
+            #### 4. AndroTotal
+
+            #### 5. Status
           </script>
         </section>
 
@@ -221,7 +253,7 @@
           <script type="text/template">
             ### Antimalware Products
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">We count about 100 (free) antimalware products</li>
               <li class="fragments">They are all based on _signature matching_</li>
               <li class="fragments">Some provide extras if granted root privileges</li>
@@ -233,7 +265,7 @@
           <script type="text/template">
             ### How to measure their effectiveness?
 
-            <ol>
+            <ol class="fragment">
               <li class="fragments">Obtain <strong>M</strong> samples of known malware</li>
               <li class="fragments">Apply <strong>T</strong> transformations to each sample</li>
               <li class="fragments">Analyze with <strong>P</strong> x <strong>V</strong> antimalware products and versions</li>
@@ -246,7 +278,7 @@
           <script type="text/template">
             ### Numbers
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">M = 1,000 (very conservative)</li>
               <li class="fragments">T = 3 (obfuscation, encryption, repackaging)</li>
               <li class="fragments">P = 100</li>
@@ -264,7 +296,7 @@
           <script type="text/template">
             ### Challenges
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">Some parallelization is required ("just" engineering)</li>
               <li class="fragments">Android antimalware products are UI driven</li>
             </ul>
@@ -276,23 +308,26 @@
             ### State of the Art
 
             <ul>
-            <li class="fragments">H. Pilz, <em>"Building a test environment for Android anti-malware tests,"</em> VB Conf.'12</li>
+            <li class="fragment">H. Pilz, <em>"Building a test environment for Android anti-malware tests,"</em> Virus Bulletin Conference '12
 
               <ul>
                 <li class="fragments">Human oracle is needed</li>
               </ul>
+            </li>
 
-            <li class="fragments">M. Zheng, P. P. C. Lee, and J. C. S. Lui, <em>"ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems,"</em> DIMVA'12</li>
+            <li class="fragment">M. Zheng, P. P. C. Lee, and J. C. S. Lui, <em>"ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems,"</em> DIMVA'12
 
               <ul>
                 <li class="fragments">Focus on transformation, uses VirusTotal.com</li>
               </ul>
+            </li>
 
-            <li class="fragments">V. Rastogi, Y. Chen, and X. Jiang, <em>"DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks,"</em> AsiaCCS'13</li>
+            <li class="fragment">V. Rastogi, Y. Chen, and X. Jiang, <em>"DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks,"</em> AsiaCCS'13
 
               <ul>
                 <li class="fragments">Focus on transformation, uses custom scripts</li>
               </ul>
+            </li>
             </ul>
           </script>
         </section>
@@ -301,30 +336,35 @@
           <script type="text/template">
             ## Lack of Automation Tools
 
-            <h3 class="fragments">VirusTotal</h3>
+            <h3 class="fragment">VirusTotal</h3>
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">Relies on command-line, desktop-based AVs with signatures for Android</li>
               <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
               <li class="fragments">No versioning support</li>
             </ul>
+            </div>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ## 3. AndroTotal
+            #### 1. Security threats and protections
 
-            <img src="img/andrototal_logo.png" style="background: white !important;" />
+            #### 2. Limitations
 
-            http://andrototal.org
+            #### 3. Evaluating antimalware
+
+            ## 4. AndroTotal
+
+            #### 5. Status
           </script>
         </section>
 
         <section>
           <section data-markdown>
             <script type="text/template">
-              ## AndroTotal
+              <img width="30%" src="img/andrototal_logo.png" style="background: white !important;" />
 
               <ul>
                 <li class="fragments">SDK for writing UI tests/scrapers</li>
@@ -351,6 +391,12 @@
         <section>
           <section data-markdown>
             <script type="text/template">
+              ![AndroTotal Screenshot](img/scan.png)
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
               ![AndroTotal Screenshot](img/andrototal-web-0.png)
             </script>
           </section>
@@ -372,7 +418,7 @@
           <script type="text/template">
             ### Architecture
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">Web frontend</li>
               <li class="fragments">Repository of clean Android images</li>
               <li class="fragments">Asynchronous task dispatcher</li>
@@ -385,7 +431,7 @@
           <script type="text/template">
             ### Workflow
 
-            <ol>
+            <ol class="fragment">
               <li class="fragments">Retrieve a suspicious APK</li>
 
               <li class="fragments">Choose parameters
@@ -463,12 +509,20 @@ def on_demand_detection(self, sample_path):
           <script type="text/template">
             ### Scalability
 
-            <img class="fragments" src="img/scalability.png" width="75%" />
+            <img class="fragment" src="img/scalability.png" width="75%" />
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
+            #### 1. Security threats and protections
+
+            #### 2. Limitations
+
+            #### 3. Evaluating antimalware
+
+            #### 4. AndroTotal
+
             ## 5. Status
           </script>
         </section>
@@ -488,14 +542,19 @@ def on_demand_detection(self, sample_path):
           <script type="text/template">
             ### TODOs
 
-            <ul>
+            <ul class="fragment">
               <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
               <li class="fragments">Incorporate code-mutation modules</li>
               <li class="fragments">Add more cores and scale</li>
-              <li class="fragments">Finish the API (only sample-sharing is supported as of now)</li>
+              <li class="fragments"><strike>Finish the API (only sample-sharing is supported as of now)</strike></li>
               <li class="fragments">Deploy on ARM boards and monitor power consumption</li>
             </ul>
           </script>
+        </section>
+
+        <section>
+          <h3>7 hours ago...</h3>
+          <img class="fragment" src="img/update.png" />
         </section>
 
         <section data-markdown>
@@ -517,15 +576,6 @@ def on_demand_detection(self, sample_path):
         <section data-markdown>
           <script type="text/template">
             ## Extra Slides
-          </script>
-        </section>
-
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Android Architecture
-
-            <img width="50%" src="img/android.png" />
           </script>
         </section>
 
@@ -570,3 +620,6 @@ def on_demand_detection(self, sample_path):
     </script>
   </body>
 </html>
+
+<!--  LocalWords:  AndroTotal Scalable Antivirus px img
+ -->
