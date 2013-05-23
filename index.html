@@ -142,8 +142,9 @@
             ### Android Security Approach
 
             <ul class="fragment">
+            <li class="fragments">Official apps on Google Play are vetted upon submission</li>
             <li class="fragments">"Proprietary" JVM (Dalvik) runtime environment</li>
-            <li class="fragments">One Dalvik process per app (APK), which translates bytecode into machine code (e.g., ARM)</li>
+            <li class="fragments">One Dalvik process per app</li>
             <li class="fragments">Isolated processes with distinct `uid`, `gid`</li>
             <li class="fragments">"Sensitive" operations require permissions</li>
             </li>
@@ -213,7 +214,7 @@
               <ul>
                 <li class="fragments">Social engineering</li>
                 <li class="fragments">Phishing</li>
-                <li class="fragments">Antimalware evasion</li>
+                <li class="fragments">Signature evasion</li>
               </ul>
 
             </li>
@@ -223,7 +224,7 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Evading Antimalware
+            ### Evading Signatures
 
             <h4 class="fragment">repackaging, obfuscation, encryption</h4>
 
@@ -288,18 +289,22 @@
 
             <br />
 
-            <h3 class="fragments">1,000 x 3 x 100 x 2 x 3 = 1,800,000 tests</h3>
+            <h3 class="fragment">1,000 x 3 x 100 x 2 x 3 = 1,800,000 tests</h3>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Challenges
+            ## Lack of Automation Tools
+
+            <h3 class="fragment">VirusTotal.com?</h3>
 
             <ul class="fragment">
-              <li class="fragments">Some parallelization is required ("just" engineering)</li>
-              <li class="fragments">Android antimalware products are UI driven</li>
+              <li class="fragments">Relies on command-line, desktop-based AVs with signatures for Android</li>
+              <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
+              <li class="fragments">No versioning support</li>
             </ul>
+            </div>
           </script>
         </section>
 
@@ -334,16 +339,12 @@
 
         <section data-markdown>
           <script type="text/template">
-            ## Lack of Automation Tools
-
-            <h3 class="fragment">VirusTotal</h3>
+            ### Challenges
 
             <ul class="fragment">
-              <li class="fragments">Relies on command-line, desktop-based AVs with signatures for Android</li>
-              <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
-              <li class="fragments">No versioning support</li>
+              <li class="fragments">Parallelization is required</li>
+              <li class="fragments">Android antimalware products are UI driven</li>
             </ul>
-            </div>
           </script>
         </section>
 
@@ -369,7 +370,7 @@
               <ul>
                 <li class="fragments">SDK for writing UI tests/scrapers</li>
                 <li class="fragments">Pluggable adapters for each antimalware</li>
-                <li class="fragments">Configurable tests</li>
+                <li class="fragments">Parametric tests (e.g., version, platform)</li>
                 <li class="fragments">Task queues with distributed workers</li>
               </ul>
             </script>
@@ -381,7 +382,7 @@
               <ul>
                 <li class="fragments">Web frontend for humans</li>
                 <li class="fragments">JSON/REST API for machines</li>
-                <li class="fragments">Pluggable code-mutation modules</li>
+                <li class="fragments">Pluggable code-transformation modules</li>
                 <li class="fragments">Works on both emulators and physical devices</li>
               </ul>
             </script>
@@ -412,50 +413,6 @@
               ![AndroTotal Screenshot](img/andrototal-web-2.png)
             </script>
           </section>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Architecture
-
-            <ul class="fragment">
-              <li class="fragments">Web frontend</li>
-              <li class="fragments">Repository of clean Android images</li>
-              <li class="fragments">Asynchronous task dispatcher</li>
-              <li class="fragments">Distributed workers</li>
-            </ul>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Workflow
-
-            <ol class="fragment">
-              <li class="fragments">Retrieve a suspicious APK</li>
-
-              <li class="fragments">Choose parameters
-
-                <ul>
-                  <li>Android version(s)</li>
-                  <li>List of antimalware product and versions</li>
-                </ul>
-
-              </li>
-
-              <li class="fragments">Pull clean image(s) from repository</li>
-              <li class="fragments">Instantiate one test per combination of
-
-                <ul>
-                  <li>Android version</li>
-                  <li>Product version</li>
-                </ul>
-
-              </li>
-
-              <li class="fragments">Enqueue test instances</li>
-            </ol>
-          </script>
         </section>
 
         <section data-markdown>
@@ -507,6 +464,50 @@ def on_demand_detection(self, sample_path):
 
         <section data-markdown>
           <script type="text/template">
+            ### Workflow
+
+            <ol class="fragment">
+              <li class="fragments">Retrieve a suspicious APK</li>
+
+              <li class="fragments">Choose parameters
+
+                <ul>
+                  <li>Android version(s)</li>
+                  <li>List of antimalware product and versions</li>
+                </ul>
+
+              </li>
+
+              <li class="fragments">Pull clean image(s) from repository</li>
+              <li class="fragments">Instantiate one test per combination of
+
+                <ul>
+                  <li>Android version</li>
+                  <li>Product version</li>
+                </ul>
+
+              </li>
+
+              <li class="fragments">Enqueue test instances</li>
+            </ol>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Architecture
+
+            <ul class="fragment">
+              <li class="fragments">Web frontend</li>
+              <li class="fragments">Repository of clean Android images</li>
+              <li class="fragments">Asynchronous task dispatcher</li>
+              <li class="fragments">Distributed workers</li>
+            </ul>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             ### Scalability
 
             <img class="fragment" src="img/scalability.png" width="75%" />
@@ -540,9 +541,10 @@ def on_demand_detection(self, sample_path):
 
         <section data-markdown>
           <script type="text/template">
-            ### TODOs
+            ### Future Work
 
             <ul class="fragment">
+              <li class="fragments">Write a paper :)</li>
               <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
               <li class="fragments">Incorporate code-mutation modules</li>
               <li class="fragments">Add more cores and scale</li>
@@ -555,6 +557,21 @@ def on_demand_detection(self, sample_path):
         <section>
           <h3>7 hours ago...</h3>
           <img class="fragment" src="img/update.png" />
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Other Ongoing Work on Android Malware Analysis
+
+            * PLASMA - Android framework instrumented for malware
+            dynamic analysis
+
+            * PuppetDroid - increasing code coverage of "corner cases"
+            in dynamic analysis through semi-automatic UI stimulation
+
+            * MoBucket (Mobile Malware Bucket) - consolidated dataset
+            of mobile malware
+          </script>
         </section>
 
         <section data-markdown>
