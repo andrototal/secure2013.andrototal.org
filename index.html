@@ -7,7 +7,7 @@
     <title>AndroTotal: A Scalable Framework for Android Antivirus Testing</title>
 
     <meta name="description" content="A Scalable Framework for Android Antivirus Testing">
-    <meta name="author" content="Andrea Valdi, Federico Maggi, Stefano Zanero">
+    <meta name="author" content="Federico Maggi, Andrea Valdi, Stefano Zanero">
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="css/reveal.min.css">
-    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+    <link rel="stylesheet" href="css/theme/andrototal.css" id="theme">
 
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="lib/css/solarized_dark.css">
@@ -44,6 +44,10 @@
         height: 80px;
         background: white !important;
       }
+
+      a img {
+        border: 0 !important;
+      }
     </style>
 
     <!--[if lt IE 9]>
@@ -61,13 +65,13 @@
             ## A Scalable Framework for
             ## Android Antimalware Testing
 
-            <a href="http://andreavaldi.org">Andrea Valdi</a>, <a href="http://maggi.cc"><strong>Federico Maggi</strong></a>, <a href="http://zanero.org">Stefano Zanero</a>
+            <a href="http://maggi.cc"><strong>Federico Maggi</strong></a>, <a href="http://andreavaldi.org">Andrea Valdi</a>, <a href="http://zanero.org">Stefano Zanero</a>
 
             <a href="http://polimi.it">Politecnico di Milano</a>, <a href="http://www.deib.polimi.it">DEIB</a>
 
             <a href="mailto:fede@maggi.cc">fede@maggi.cc</a>
 
-            <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
+            <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a>
           </script>
         </section>
 
@@ -75,11 +79,11 @@
           <script type="text/template">
             ### Roadmap
 
-            1. Threats and protections
+            1. Android threats and protections
 
             1. Limitations
 
-            1. Evaluating antimalware
+            1. Testing antimalware
 
             1. AndroTotal
 
@@ -89,11 +93,11 @@
 
         <section data-markdown>
           <script type="text/template">
-            ## 1. Threats and protections
+            ## 1. Android threats and protections
 
             #### 2. Limitations
 
-            #### 3. Evaluating antimalware
+            #### 3. Testing antimalware
 
             #### 4. AndroTotal
 
@@ -105,23 +109,13 @@
           <script type="text/template">
             ### Android Facts
 
-            * Android is the most popular mobile platform
+            * <a href="http://www.idc.com/getdoc.jsp?containerId=prUS24257413">Android is the most popular mobile platform (79%)</a>
 
             * Rich marketplaces stocked with apps
 
             * Very attractive target for attackers
-          </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Growth of Malicious Apps
-
-            <div class="fragment">
-              <img width="70%" src="img/malware-growth.jpg" />
-
-              http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
-              </div>
+            ![Alt](img/android-stats.png)
           </script>
         </section>
 
@@ -139,33 +133,51 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Android Security Approach
+            ### Growth of Malicious Apps (2011&mdash;2012)
+
+            <div class="fragment">
+              <img width="70%" src="img/malware-growth.jpg" />
+
+              http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
+              </div>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Number of mobile "threats" (Q1 2013)
+
+            * Symantec: ~3,900
+
+            * McAfee: ~60,000
+
+            * TrendMicro: ~509,000
+
+            <a href="https://docs.google.com/presentation/d/1YDYUrD22Xq12nKkhBfwoJBfw2Q-OReMr0BrDfHyfyPw/edit?forcehl=1&hl=en#slide=id.g1202bd8e5_0140">Google @ VB2013: Situation is vastly exaggerated</a>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Google's Layered Security Approach
 
             <ul class="fragment">
-            <li class="fragments">Official apps on Google Play are vetted upon submission</li>
-            <li class="fragments">"Proprietary" JVM (Dalvik) runtime environment</li>
-            <li class="fragments">One Dalvik process per app</li>
-            <li class="fragments">Isolated processes with distinct `uid`, `gid`</li>
-            <li class="fragments">"Sensitive" operations require permissions</li>
-            </li>
+              <li class="fragments">Google Play vetting</li>
+              <li class="fragments">Install and permission confirmation</li>
+              <li class="fragments">SMS/call blacklisting and quota</li>
+              <li class="fragments">Runtime checks (?)</li>
+              <li class="fragments">App sandboxing</li>
+            </ul>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Android Architecture
+            ### App Sandboxing
 
             <img width="50%" src="img/android.png" />
-          </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ## Consequence
-
-            An app (process) cannot interfere
-
-            with another app's memory or filesystem.
+            "Sensitive" operations require static permissions
           </script>
         </section>
 
@@ -175,7 +187,7 @@
 
             ## 2. Limitations
 
-            #### 3. Evaluating antimalware
+            #### 3. Testing antimalware
 
             #### 4. AndroTotal
 
@@ -188,7 +200,7 @@
             ### Antimalware Limitations
 
             <ul class="fragment">
-            <li class="fragments">Cannot observe running processes</li>
+            <li class="fragments">No primitives for auditing running processes</li>
             <li class="fragments">Workarounds:
               <ul>
                 <li class="fragments">Signature-based matching</li>
@@ -207,26 +219,22 @@
             ### Malware Limitations
 
             <ul class="fragment">
-            <li class="fragments">Classic malware approaches do not apply</li>
-            <li class="fragments">Example: Memory errors cannot be exploited</li>
-            <li class="fragments">Workarounds:
-
-              <ul>
-                <li class="fragments">Social engineering</li>
-                <li class="fragments">Phishing</li>
-                <li class="fragments">Signature evasion</li>
-              </ul>
-
-            </li>
+              <li class="fragments">Less freedom: a malware is an isolated app itself</li>
+              <li class="fragments">Workarounds:
+                <ul>
+                  <li class="fragments">Social engineering</li>
+                  <li class="fragments"><strong>Signature evasion</strong></li>
+                </ul>
+              </li>
             </ul>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Evading Signatures
+            ### Signature Evasion
 
-            <h4 class="fragment">repackaging, obfuscation, encryption</h4>
+            <h4 class="fragment">More Variants than Distinct Families</h4>
 
             <div class="fragment">
             <img width="80%" src="img/many-variants.png" />
@@ -238,11 +246,30 @@
 
         <section data-markdown>
           <script type="text/template">
+            ### Signature Evasion
+
+            #### obfuscation, encryption, repackaging
+
+            [ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems, DIVMA2013](http://www.cse.cuhk.edu.hk/~pclee/www/pubs/dimva12.pdf)
+
+            &nbsp;
+
+            [DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks, AsiaCCS2013](http://www.cs.ncsu.edu/faculty/jiang/pubs/ASIACCS13_DroidChameleon.pdf)
+
+            &nbsp;
+
+            Based on this research we implemented 11 mutation scripts.
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             #### 1. Threats and protections
 
             #### 2. Limitations
 
-            ## 3. Evaluating antimalware
+            ## 3. Testing antimalware
 
             #### 4. AndroTotal
 
@@ -255,21 +282,20 @@
             ### Antimalware Products
 
             <ul class="fragment">
-              <li class="fragments">We count about 100 (free) antimalware products</li>
-              <li class="fragments">They are all based on _signature matching_</li>
-              <li class="fragments">Some provide extras if granted root privileges</li>
+              <li class="fragments">About 100 (free) antimalware apps</li>
+              <li class="fragments">Extra features on rooted devices</li>
             </ol>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### How to measure their effectiveness?
+            ### How to test them?
 
             <ol class="fragment">
               <li class="fragments">Obtain <strong>M</strong> samples of known malware</li>
               <li class="fragments">Apply <strong>T</strong> transformations to each sample</li>
-              <li class="fragments">Analyze with <strong>P</strong> x <strong>V</strong> antimalware products and versions</li>
+              <li class="fragments">Analyze <strong>M</strong> &times; <strong>T</strong> variants with <strong>P</strong> antimalware apps </li>
               <li class="fragments">Repeat for each of the <strong>A</strong> Android versions</li>
             </ol>
           </script>
@@ -281,15 +307,14 @@
 
             <ul class="fragment">
               <li class="fragments">M = 1,000 (very conservative)</li>
-              <li class="fragments">T = 3 (obfuscation, encryption, repackaging)</li>
+              <li class="fragments">T = 11
               <li class="fragments">P = 100</li>
-              <li class="fragments">V = 2 (simple example)</li>
               <li class="fragments">A = 3 (2.3, 4.1, 4.2)</li>
             </ul>
 
             <br />
 
-            <h3 class="fragment">1,000 x 3 x 100 x 2 x 3 = 1,800,000 tests</h3>
+            <h3 class="fragment">1,000 &times; 11 &times; 100 &times; 3 = 3,300,000 tests</h3>
           </script>
         </section>
 
@@ -300,7 +325,7 @@
             <h3 class="fragment">VirusTotal.com?</h3>
 
             <ul class="fragment">
-              <li class="fragments">Relies on command-line, desktop-based AVs with signatures for Android</li>
+              <li class="fragments">Command-line, desktop-based AVs with signatures for Android</li>
               <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
               <li class="fragments">No versioning support</li>
             </ul>
@@ -323,14 +348,14 @@
             <li class="fragment">M. Zheng, P. P. C. Lee, and J. C. S. Lui, <em>"ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems,"</em> DIMVA'12
 
               <ul>
-                <li class="fragments">Focus on transformation, uses VirusTotal.com</li>
+                <li class="fragments">Focus on transformation</li>
               </ul>
             </li>
 
             <li class="fragment">V. Rastogi, Y. Chen, and X. Jiang, <em>"DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks,"</em> AsiaCCS'13
 
               <ul>
-                <li class="fragments">Focus on transformation, uses custom scripts</li>
+                <li class="fragments">Focus on transformation</li>
               </ul>
             </li>
             </ul>
@@ -339,10 +364,10 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Challenges
+            ### Technical Requirements
 
             <ul class="fragment">
-              <li class="fragments">Parallelization is required</li>
+              <li class="fragments">Scalable architecture</li>
               <li class="fragments">Android antimalware products are UI driven</li>
             </ul>
           </script>
@@ -354,7 +379,7 @@
 
             #### 2. Limitations
 
-            #### 3. Evaluating antimalware
+            #### 3. Testing antimalware
 
             ## 4. AndroTotal
 
@@ -365,7 +390,7 @@
         <section>
           <section data-markdown>
             <script type="text/template">
-              <img width="30%" src="img/andrototal_logo.png" style="background: white !important;" />
+              <img width="40%" src="img/andrototal_logo.png" style="background: white !important;" />
 
               <ul>
                 <li class="fragments">SDK for writing UI tests/scrapers</li>
@@ -413,6 +438,12 @@
               ![AndroTotal Screenshot](img/andrototal-web-2.png)
             </script>
           </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ![AndroTotal Screenshot](img/andrototal-beta.png)
+            </script>
+          </section>
         </section>
 
         <section data-markdown>
@@ -427,6 +458,7 @@
 
         <section>
           <section>
+            <h2>AndroPilot</h2>
             <h3>Test Recipe (on-install detection)</h3>
 <pre><code class="python">#andrototal-adapters/ComZonerAndroidAntivirus.py
 class TestSuite(base.BaseTestSuite):
@@ -462,6 +494,10 @@ def on_demand_detection(self, sample_path):
           </section>
         </section>
 
+        <section>
+          <img src="img/scraping.png" alt="" />
+        </section>
+
         <section data-markdown>
           <script type="text/template">
             ### Workflow
@@ -474,6 +510,7 @@ def on_demand_detection(self, sample_path):
                 <ul>
                   <li>Android version(s)</li>
                   <li>List of antimalware product and versions</li>
+                  <li>Apply chain of mutations</li>
                 </ul>
 
               </li>
@@ -508,6 +545,30 @@ def on_demand_detection(self, sample_path):
 
         <section data-markdown>
           <script type="text/template">
+            ### REST/JSON API and Client
+
+            * Push (public) and pull (invite only) samples
+
+            * Python client: https://bitbucket.org/andrototal/tools
+
+            <pre><code class="python">
+$ python andrototal_cli.py -l DEBUG scan -at-key <...> -ms-key <...> path/to/sample.apk sample2.apk more/*samples.apk
+
+Running command: scan
+Uploading file sample.apk
+Scan response: {"resource": "10a6f3efc8bc40c1922facde7d055208"}
+Uploading file sample2.apk
+Scan response: {"resource": "e870c6748ca3409f84c9c9e1a91daf3f"}
+Uploading file 40156a176bb4554853f767bb6647fd0ac1925eac.apk
+Scan response: {"resource": "21d6c7234a184db6b8e52f2bab523787"}
+Uploading file samples-3.apk
+Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
+            </code></pre>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             ### Scalability
 
             <img class="fragment" src="img/scalability.png" width="75%" />
@@ -520,7 +581,7 @@ def on_demand_detection(self, sample_path):
 
             #### 2. Limitations
 
-            #### 3. Evaluating antimalware
+            #### 3. Testing antimalware
 
             #### 4. AndroTotal
 
@@ -532,11 +593,57 @@ def on_demand_detection(self, sample_path):
           <script type="text/template">
             ### Numbers
 
-            * 455 users subscribed in less than a month
+            * 1,275 users subscribed
             * 13 antimalware vendors supported (not all public)
             * 16 products overall (not all public)
-            * 1,465 distinct samples submitted so far
+            * 23,215 distinct APKs submitted and analyzed
           </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Supported apps (public)
+            * ZONER, Inc. - Zoner AntiVirus Free 1.8.0
+            * ZONER, Inc. - Zoner AntiVirus Free 1.7.6
+            * AVAST Software - avast! Mobile Security 2.0.3917
+            * Doctor Web, Ltd - Dr.Web Anti-virus Light (free) 7.00.3
+            * Kaspersky Lab - Kaspersky Mobile Security Lite 9.36.28
+            * Kaspersky Lab - Kaspersky Mobile Security 10.4.41
+            * Trend Micro - Mobile Security & Antivirus 2.6.2
+            * Trend Micro - Mobile Security & Antivirus 3.1
+            * NortonMobile - Norton Security & Antivirus 3.2.0.769
+            * NortonMobile - Norton Security & Antivirus 3.3.4.970
+          </script>
+        </section>
+
+        <section>
+          <table>
+            <thead>
+              <tr><th>Label</th><th>#</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>UDS:DangerousObject.Multi.Generic    </td><td>3963</td></tr>
+              <tr><td>HEUR:Trojan-SMS.AndroidOS.Opfake.bo  </td><td>1252</td></tr>
+              <tr><td>not a virus Adware.Airpush.origin.7  </td><td>701 </td></tr>
+              <tr><td>AndroidOS Opfake.CTD                 </td><td>700 </td></tr>
+              <tr><td>HEUR:Trojan-SMS.AndroidOS.Opfake.a   </td><td>628 </td></tr>
+              <tr><td>Android.SmsSend.origin.281           </td><td>620 </td></tr>
+              <tr><td>Android:FakeNotify-A [Trj]           </td><td>620 </td></tr>
+              <tr><td>HEUR:Trojan-SMS.AndroidOS.FakeInst.a </td><td>512 </td></tr>
+              <tr><td>Android.SmsSend.origin.315           </td><td>485 </td></tr>
+              <tr><td>HEUR:Backdoor.AndroidOS.KungFu.a     </td><td>466 </td></tr>
+              <tr><td>Android.SmsSend.origin.585           </td><td>462 </td></tr>
+              <tr><td>Android.SmsSend.origin.629           </td><td>461 </td></tr>
+              <tr><td>Adware.AndroidOS.Airpush-Gen         </td><td>432 </td></tr>
+              <tr><td>HEUR:Backdoor.AndroidOS.BaseBrid.a   </td><td>390 </td></tr>
+              <tr><td>AndroidOS Opfake.CTC                 </td><td>386 </td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Average speed: No major winner</h3>
+          <img src="img/avgtime.png" width="120%" alt="" />
         </section>
 
         <section data-markdown>
@@ -544,33 +651,11 @@ def on_demand_detection(self, sample_path):
             ### Future Work
 
             <ul class="fragment">
-              <li class="fragments">Write a paper :)</li>
-              <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
-              <li class="fragments">Incorporate code-mutation modules</li>
               <li class="fragments">Add more cores and scale</li>
-              <li class="fragments"><strike>Finish the API (only sample-sharing is supported as of now)</strike></li>
+              <li class="fragments">Compare labels and detection results with VirusTotal.com</li>
               <li class="fragments">Deploy on ARM boards and monitor power consumption</li>
+              <li class="fragments">Open malware repository and API: <strong>anyone interested?</strong></li>
             </ul>
-          </script>
-        </section>
-
-        <section>
-          <h3>7 hours ago...</h3>
-          <img class="fragment" src="img/update.png" />
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Other Ongoing Work on Android Malware Analysis
-
-            * PLASMA - Android framework instrumented for malware
-            dynamic analysis
-
-            * PuppetDroid - increasing code coverage of "corner cases"
-            in dynamic analysis through semi-automatic UI stimulation
-
-            * MoBucket (Mobile Malware Bucket) - consolidated dataset
-            of mobile malware
           </script>
         </section>
 
@@ -578,29 +663,15 @@ def on_demand_detection(self, sample_path):
           <script type="text/template">
             <img class="logo" src="img/andrototal_logo.png" class="" alt="" />
 
-            ## Thank you!
+            ## Grab a sticker!
 
             # Questions?
 
-            Try it now at <a href="http://andrototal.org">andrototal.org</a>!
+            http://andrototal.org
+
+            <a href="http://twitter.com/andrototal_org">@andrototal_org</a>
 
             <a href="mailto:fede@maggi.cc">fede@maggi.cc</a>
-
-            <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a> <a href="http://www.aware-project.eu"><img class="logo" src="img/awareness.png" class="" alt="" /></a> <a href="http://www.hipeac.net"><img class="logo" src="img/hipeactransparent.png" class="" alt="" /> <a href="http://www.syssec-project.eu"><img class="logo" src="img/syssec.png" class="" alt="" /></a>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ## Extra Slides
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Android Popularity
-
-            <img width="50%" src="img/android-stats.png" />
           </script>
         </section>
 
