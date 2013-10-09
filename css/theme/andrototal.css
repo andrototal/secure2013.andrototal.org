@@ -157,3 +157,7 @@ body {
     border-top: solid 3px black;
     border-bottom: solid 2px black;
 }
+
+.reveal .beta {
+    color: rgb(34, 160,	209) !important;
+}

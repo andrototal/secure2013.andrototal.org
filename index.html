@@ -61,6 +61,8 @@
       <div class="slides">
         <section data-markdown>
           <script type="text/template">
+            ## [SECURE2013](http://www.secure.edu.pl/en/conference.php)
+
             # AndroTotal
             ## A Scalable Framework for
             ## Android Antimalware Testing
@@ -73,6 +75,10 @@
 
             <a href="http://necst.it"><img class="logo" src="img/necst.png" class="" alt="" /></a>
           </script>
+
+          <aside class="notes">
+            Notes are provided: these are "talking" slides :-)
+          </aside>
         </section>
 
         <section data-markdown>
@@ -89,6 +95,28 @@
 
             1. Status
           </script>
+
+          <aside class="notes">
+            As you may easily guess, this presentation is going to be
+            about Android.
+
+            First of all I'm going to give you a brief overview of the
+            most relevant threats and protections.
+
+            Then, I will explain some of the current limitations,
+            and explain you why it is important to conduct antimalware
+            testing.
+
+            After this introduction I will describe how AndroTotal
+            works and how it can be used by anyone, and especially
+            security researchers and companies, to conduct antimalware
+            experiments.
+
+            I will conclude my presentation with the current status of
+            the AndroTotal project, the data that we collected so far,
+            and our plans for the future, which include the
+            collaboration with security vendors.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -117,30 +145,19 @@
 
             ![Alt](img/android-stats.png)
           </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Attackers Goals
+          <aside class="notes">
+            I think I'm giving no big news by saying that Android is
+            the most popular mobile software platform: It actually
+            holds 79 percent of the market.
 
-            <ul class="fragment">
-              <li class="fragments">Steal sensitive data (intercept texts or calls)</li>
-              <li class="fragments">Turn devices into bots (perform malicious actions)</li>
-              <li class="fragments">Financial gain (call or text premium numbers)</li>
-            </ul>
-          </script>
-        </section>
+            The Android ecosystem offers rich marketplaces with many
+            apps.
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Growth of Malicious Apps (2011&mdash;2012)
-
-            <div class="fragment">
-              <img width="70%" src="img/malware-growth.jpg" />
-
-              http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
-              </div>
-          </script>
+            As it always happens, the more a system becomes popular,
+            the more that system becomes an attractive target for
+            malicious actors.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -155,6 +172,69 @@
 
             <a href="https://docs.google.com/presentation/d/1YDYUrD22Xq12nKkhBfwoJBfw2Q-OReMr0BrDfHyfyPw/edit?forcehl=1&hl=en#slide=id.g1202bd8e5_0140">Google @ VB2013: Situation is vastly exaggerated</a>
           </script>
+
+          <aside class="notes">
+            The actual number of "threats" is not very relevant
+            because, depending at what we consider as "one instance"
+            of a threat, the numbers vary from vendor to vendor.
+
+            According to Google's last week talk at Virus Bulletin
+            Conference, this threat landscape is vastly exaggerated,
+            and that despite the large number of malware samples, the
+            actual infections are very rare.
+          </aside>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Growth of Malicious Apps (2011&mdash;2012)
+
+            <div class="fragment">
+              <img width="70%" src="img/malware-growth.jpg" />
+
+              http://blog.trendmicro.com/trendlabs-security-intelligence/byod-a-leap-of-faith-for-enterprise-users/
+              </div>
+          </script>
+
+          <aside class="notes">
+            We can see that there is an interest by looking at trends
+            like the one depicted in this slide, which comes from
+            TrendMicro.
+
+            Even though the actual numbers can vary significantly
+            depending on what we consider as "one threat", all the
+            security vendors and researchers agree that in the past
+            two years there has been a growth in the number of
+            malicious applications.
+          </aside>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Attackers Goals
+
+            <ul class="fragment">
+              <li class="fragments">Steal sensitive data (intercept texts or calls)</li>
+              <li class="fragments">Turn devices into bots (perform malicious actions)</li>
+              <li class="fragments">Financial gain (call or text premium numbers)</li>
+            </ul>
+          </script>
+
+          <aside class="notes">
+            So, let's see what are the main goals of the attackers in this context.
+
+            Given the substantial amount of sensitive data that we
+            exchange with our smartphones, the attackers are certainly
+            interested in it. Think for instance about a phone call, text message,
+            or email that carry confidential information such as you online banking
+            credentials.
+
+            Given the stable Internet connectivity and the great
+            computational power of modern smartphones, attackers are
+            also interested in botnet-like functionalities, used later on for subsequent
+            infections, information stealing and financial gain through premium
+            texting and calling.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -165,10 +245,33 @@
               <li class="fragments">Google Play vetting</li>
               <li class="fragments">Install and permission confirmation</li>
               <li class="fragments">SMS/call blacklisting and quota</li>
-              <li class="fragments">Runtime checks (?)</li>
+              <li class="fragments">Runtime checks</li>
               <li class="fragments">App sandboxing</li>
             </ul>
           </script>
+
+          <aside class="notes">
+            Indeed, Google takes Android security very seriously. It adopts a layered
+            approach.
+
+            First, applications and developers on the Google Play marketplace are subject
+            to very thorough checks.
+
+            Although we all known that the human user is the weakest
+            link, another security measure is that applications cannot
+            be installed without the user's explicit approval.
+
+            Then, them most recent versions of Android adopt SMS and call blacklisting
+            and quota mechanism to mitigate the apps that contact premium numbers that
+            pay a commission to the malware developer.
+
+            There are also so-called "runtime checks", which are meant to
+            verify that an application isn't known to be malicious by communicating
+            back with Google's server. Pretty much like Google Safebrowsing does
+            when we use Chrome to visit websites.
+
+            Most importantly, apps are sandboxed.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -179,6 +282,18 @@
 
             "Sensitive" operations require static permissions
           </script>
+
+          <aside class="notes">
+            Each app is run within a dedicated Linux process. This
+            means that the underlying operating system takes care of
+            resource isolation. For instance, a running app cannot
+            access the memory space of another running app.
+
+            In addition, each app is run within a dedicated virtual
+            machine. This is done primarily for efficiency reasons,
+            but it also allows a better decoupling of the access to
+            the operating system's resources.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -193,11 +308,15 @@
 
             #### 5. Status
           </script>
+
+          <aside class="notes">
+            Let's now take a look at the limitations of this approach.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Antimalware Limitations
+            ### Antimalware Apps are Constrained
 
             <ul class="fragment">
             <li class="fragments">No primitives for auditing running processes</li>
@@ -212,11 +331,30 @@
             </li>
             </ul>
           </script>
+
+          <aside class="notes">
+            First of all, antimalware apps cannot inspect other
+            running apps to run security checks. This is due to the
+            sandboxing mechanism, which has no primitives to allow
+            security auditing of other apps.
+
+            The workaround is that current antimalware apps must
+            resort to classic approaches based on checking suspicious
+            applications against a database of static signatures.
+
+            This can be done when a new application is installed, or by
+            scanning the storage partition.
+
+            Some antimalware apps allow to check the entire filesystem,
+            but, because of the security model, they require root
+            privileges, which can be done only if the user knows how
+            to root his or her smartphone.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Malware Limitations
+            ### Malware is Constrained Too
 
             <ul class="fragment">
               <li class="fragments">Less freedom: a malware is an isolated app itself</li>
@@ -228,39 +366,37 @@
               </li>
             </ul>
           </script>
+
+          <aside class="notes">
+            Similar limitations also apply to malicious applications, which
+            are left with less freedom because each malware sample is itself an
+            isolated app.
+
+            The workaround is that malware authors resort to social engineering
+            techniques to get their apps installed, for instance by distributing
+            free clones of paid applications along with their malicious code.
+
+            Then, since antimalware mostly resort to static signatures, malware authors
+            can easily evade them by creating simple variants of the same family,
+            for instance through simple obfuscation techniques.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             ### Signature Evasion
 
-            <h4 class="fragment">More Variants than Distinct Families</h4>
+            <h4>More Variants than Distinct Families</h4>
 
-            <div class="fragment">
             <img width="80%" src="img/many-variants.png" />
 
             <p>http://go.eset.com/us/resources/white-papers/Trends_for_2013_preview</p>
-            </div>
           </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Signature Evasion
-
-            #### obfuscation, encryption, repackaging
-
-            [ADAM: An Automatic and Extensible Platform to Stress Test Android Anti-Virus Systems, DIVMA2013](http://www.cse.cuhk.edu.hk/~pclee/www/pubs/dimva12.pdf)
-
-            &nbsp;
-
-            [DroidChameleon: Evaluating Android Anti-malware against Transformation Attacks, AsiaCCS2013](http://www.cs.ncsu.edu/faculty/jiang/pubs/ASIACCS13_DroidChameleon.pdf)
-
-            &nbsp;
-
-            Based on this research we implemented 11 mutation scripts.
-
-          </script>
+          <aside class="notes">
+            Indeed, we can see, from this trend published by ESET, that the number of
+            variants increased over the years.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -275,39 +411,39 @@
 
             #### 5. Status
           </script>
+
+          <aside class="notes">
+            This brings me to the main topic of this presentation, which
+            is "how do we test antimalware apps".
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Antimalware Products
+            ### How to test antimalware apps?
 
-            <ul class="fragment">
-              <li class="fragments">About 100 (free) antimalware apps</li>
-              <li class="fragments">Extra features on rooted devices</li>
+            <ol>
+              <li class="fragment">Obtain <strong>M</strong> samples of known malware</li>
+              <li class="fragment">Apply <strong>T</strong> code transformation to each sample</li>
+              <li class="fragment">Produce <strong>M</strong> &times; <strong>T</strong> variants</li>
+              <li class="fragment">Analyze the variants
+              with <strong>P</strong> antimalware apps</li>
+              <li class="fragment">Repeat for each of the <strong>A</strong> Android versions</li>
             </ol>
           </script>
+
+          <aside class="notes">
+            A well-established approach follows these steps:
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### How to test them?
-
-            <ol class="fragment">
-              <li class="fragments">Obtain <strong>M</strong> samples of known malware</li>
-              <li class="fragments">Apply <strong>T</strong> transformations to each sample</li>
-              <li class="fragments">Analyze <strong>M</strong> &times; <strong>T</strong> variants with <strong>P</strong> antimalware apps </li>
-              <li class="fragments">Repeat for each of the <strong>A</strong> Android versions</li>
-            </ol>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Numbers
+            ### Let's do the math
 
             <ul class="fragment">
               <li class="fragments">M = 1,000 (very conservative)</li>
-              <li class="fragments">T = 11
+              <li class="fragments">T = 10
               <li class="fragments">P = 100</li>
               <li class="fragments">A = 3 (2.3, 4.1, 4.2)</li>
             </ul>
@@ -316,6 +452,22 @@
 
             <h3 class="fragment">1,000 &times; 11 &times; 100 &times; 3 = 3,300,000 tests</h3>
           </script>
+
+          <aside class="notes">
+            Let's do some simple math.
+
+            Let's say that we have a database of one thousand malware samples, which
+            is quite a conservative choice.
+
+            We apply 10 code transformation algorithms. This number
+            includes the most popular obfuscation algorithms.
+
+            And we run this collection against one hundred antimalware
+            products, which is the number of security apps that we
+            could find on the Google Play store.
+
+            Well, this is quite a significant number of tests.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -325,12 +477,28 @@
             <h3 class="fragment">VirusTotal.com?</h3>
 
             <ul class="fragment">
-              <li class="fragments">Command-line, desktop-based AVs with signatures for Android</li>
-              <li class="fragments">Unclear whether the same signatures will work on the respective mobile products</li>
+              <li class="fragments">Command-line, desktop-based products with signatures for Android malware</li>
+              <li class="fragments">Unclear how the same signatures will work on the respective mobile products</li>
               <li class="fragments">No versioning support</li>
             </ul>
-            </div>
           </script>
+
+          <aside class="notes">
+            We have started the AndroTotal project because we have noticed that there
+            is a lack of automation tools to help researchers to conduct these kinds of
+            tests in a scalable way.
+
+            VirusTotal is a great tool and service in this direction and it is
+            capable of analyzing Android applications with proper signatures from
+            vendors.
+
+            However, it uses command-line versions of desktop-based antiviruses, enriched
+            with signatures of known Android malware.
+
+            So, although it is very useful for detecting which vendors detect what, it
+            does not uses the actual Android antimalware applications that an end-user
+            would install on his or her device.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -359,18 +527,27 @@
               </ul>
             </li>
             </ul>
+            <br />
+            <h3 class="fragment">No big surprise: but don't blame the vendors!</h3>
           </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Technical Requirements
+          <aside class="notes">
+            The state of the art of the research in this direction is focused on
+            showing the robustness of current Android antimalware applications against
+            code obfuscation.
 
-            <ul class="fragment">
-              <li class="fragments">Scalable architecture</li>
-              <li class="fragments">Android antimalware products are UI driven</li>
-            </ul>
-          </script>
+            Given the known limitations of static signatures matching,
+            which is still the best that an antimalware app is allowed
+            to do because of the security model, the result of these
+            researches are not very surprising: most of the static
+            signatures cannot possibly detect variants if they are
+            strongly obfuscated.
+
+            This is not very surprising, and I'm not blaming the antimalware apps, of
+            course. If it would be possible for them to do auditing of running apps,
+            they would be able to do tell benign and malicious apps apart by their
+            dynamic behavior, rather than by looking at their code.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -385,13 +562,41 @@
 
             #### 5. Status
           </script>
+
+          <aside class="notes">
+            We created AndroTotal not with the purpose of showing, by comparative
+            analysis, that a certain vendor is better than another vendor.
+
+            Our purpose is to give the research community a reference tool for
+            performing automated tests, and to get labels of suspicious samples.
+
+            Additionally, our goal is also to give the vendors a way
+            to quickly test their products on several versions of
+            Android, and under different conditions.
+
+            This is what AndroTotal is meant to be.
+          </aside>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Technical Requirements
+
+              * Scalable architecture
+              * Android antimalware products are UI driven
+          </script>
+
+          <aside class="notes">
+            To do this, we needed a scalable architecture and, most importantly, a
+            simple way to automate the touch-screen user interface of antimalware
+            apps, and to screen-scrape the detection results.
+          </aside>
         </section>
 
         <section>
           <section data-markdown>
             <script type="text/template">
               <img width="40%" src="img/andrototal_logo.png" style="background: white !important;" />
-
               <ul>
                 <li class="fragments">SDK for writing UI tests/scrapers</li>
                 <li class="fragments">Pluggable adapters for each antimalware</li>
@@ -399,19 +604,51 @@
                 <li class="fragments">Task queues with distributed workers</li>
               </ul>
             </script>
-          </section>
 
-          <section data-markdown>
-            <script type="text/template">
-              ## Characteristics
-              <ul>
-                <li class="fragments">Web frontend for humans</li>
-                <li class="fragments">JSON/REST API for machines</li>
-                <li class="fragments">Pluggable code-transformation modules</li>
-                <li class="fragments">Works on both emulators and physical devices</li>
-              </ul>
-            </script>
+            <aside class="notes">
+              We implemented AndroTotal as an SDK for writing tests and screen-scraping
+              scripts.
+
+              With AndroTotal it is easy to write an adapter for each
+              antimalware app.
+
+              In addition, with AndroTotal you can create testing
+              routines that are parametric with respect to the version
+              of the antimalware app and to the Android release.
+            </aside>
           </section>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Characteristics
+            <ul>
+              <li class="fragments">Web frontend for humans</li>
+              <li class="fragments">REST/JSON API for machines</li>
+              <li class="fragments">Pluggable code-transformation modules</li>
+              <li class="fragments">Works on both emulators and physical devices</li>
+            </ul>
+          </script>
+
+          <aside class="notes">
+            AndroTotal is also a web service!
+
+            It has a web interface for human users, and a JSON/REST
+            API if you want to use it in your own applications.
+
+            Of course, you need an API key for that.
+
+            We're beta testing some code-transformation routines that
+            can be applied before running an analysis.
+
+            However, we haven't release them to the public yet, and we
+            will probably never do it. We may give access to these
+            functionalities only to vendors.
+
+            We're also testing it on physical devices, although in principle
+            we don't use any emulator-specific functionalities. So, it
+            should work without problems also on physical devices.
+          </aside>
         </section>
 
         <section>
@@ -439,10 +676,13 @@
             </script>
           </section>
 
-          <section data-markdown>
-            <script type="text/template">
-              ![AndroTotal Screenshot](img/andrototal-beta.png)
-            </script>
+          <section>
+            <h4>Code transformation: Not public (<span class="beta">beta</span> only)</h4>
+            <div data-markdown>
+              <script type="text/template">
+                ![AndroTotal Screenshot](img/andrototal-beta.png)
+              </script>
+            </div>
           </section>
         </section>
 
@@ -454,13 +694,28 @@
 
             we can focus on the important things: _extracting the results_.
           </script>
+
+          <aside class="notes">
+            Writing user-interface tests is tedious, really.
+
+            When developing AndroPilot, which is AndroTotal SDK for writing
+            tests, we've striven to abstract away all the low-level details as
+            much as possible.
+
+            In this way a developer can focus on the important things
+            such as extracting the detection results automatically.
+          </aside>
+        </section>
+
+        <section>
+          <img src="img/scraping.png" alt="" />
         </section>
 
         <section>
           <section>
             <h2>AndroPilot</h2>
             <h3>Test Recipe (on-install detection)</h3>
-<pre><code class="python">#andrototal-adapters/ComZonerAndroidAntivirus.py
+            <pre><code class="python">#andrototal-adapters/ComZonerAndroidAntivirus.py
 class TestSuite(base.BaseTestSuite):
   def on_install_detection(self, sample_path):
     self.pilot.install_package(sample_path)
@@ -471,6 +726,21 @@ class TestSuite(base.BaseTestSuite):
       result = self.pilot.get_view_by_id("scaninfected_row_virus")
     else:
       result = False</code></pre>
+
+            <aside class="notes">
+              Here you can see an example of how to create a test for
+              the Zoner antivirus. In particular, we want to see how
+              the antimalware reacts whenever a new application is
+              installed.
+
+              The first line of this short Python script takes care of installing
+              the new application.
+
+              Then, for the antimalware reaction.
+
+              If that happens, we call the scraper routine that takes care of
+              extracting the detected threat label, if any.
+            </aside>
           </section>
 
           <section>
@@ -489,65 +759,44 @@ def on_demand_detection(self, sample_path):
   self.pilot.wait_for_activity(
     "com.zoner.android.antivirus_common.ActScanResults")
 
-  self.pilot.refre dsh()
+  self.pilot.refresh()
 # ...</code></pre>
           </section>
-        </section>
 
-        <section>
-          <img src="img/scraping.png" alt="" />
+          <aside class="notes">
+            In a similar way, we can create a testing script that installs
+            a new application, launches the antimalware app, and taps on
+            a given button to request an on-demand scan.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Workflow
+            ### Under the hood
 
             <ol class="fragment">
-              <li class="fragments">Retrieve a suspicious APK</li>
-
-              <li class="fragments">Choose parameters
-
-                <ul>
-                  <li>Android version(s)</li>
-                  <li>List of antimalware product and versions</li>
-                  <li>Apply chain of mutations</li>
-                </ul>
-
-              </li>
-
-              <li class="fragments">Pull clean image(s) from repository</li>
-              <li class="fragments">Instantiate one test per combination of
-
-                <ul>
-                  <li>Android version</li>
-                  <li>Product version</li>
-                </ul>
-
-              </li>
-
+              <li class="fragments">Create clean Android emulator image(s)</li>
+              <li class="fragments">Uploading or installing the suspicious APK</li>
+              <li class="fragments">Instantiate the test script</li>
               <li class="fragments">Enqueue test instances</li>
             </ol>
           </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Architecture
-
-            <ul class="fragment">
-              <li class="fragments">Web frontend</li>
-              <li class="fragments">Repository of clean Android images</li>
-              <li class="fragments">Asynchronous task dispatcher</li>
-              <li class="fragments">Distributed workers</li>
-            </ul>
-          </script>
+          <aside class="notes">
+            Under the hood, AndroTotal takes care of creating a clean
+            Android emulator instance, uploading or installing the
+            suspicious APK, and enqueue as many test instances are
+            necessary. For instance, a user may request to repeat the
+            same test suite on four different Android versions, or on
+            2 different product versions of the same vendor.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             ### REST/JSON API and Client
 
-            * Push (public) and pull (invite only) samples
+            * Push (public) and pull (private) samples
 
             * Python client: https://bitbucket.org/andrototal/tools
 
@@ -565,14 +814,16 @@ Uploading file samples-3.apk
 Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
             </code></pre>
           </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Scalability
+          <aside class="notes">
+            As I said there is a REST/JSON API.
 
-            <img class="fragment" src="img/scalability.png" width="75%" />
-          </script>
+            We also created a Python command-line client, which is publicly available,
+            to submit samples and retrieve the analysis results.
+
+            In addition, we offer an private-only API to pull samples
+            from our repository.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -587,17 +838,31 @@ Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
 
             ## 5. Status
           </script>
+
+          <aside class="notes">
+            Let me now conclude with a quick update on which data we
+            have collected so far.
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             ### Numbers
 
-            * 1,275 users subscribed
             * 13 antimalware vendors supported (not all public)
             * 16 products overall (not all public)
+            * 1,275 users subscribed
             * 23,215 distinct APKs submitted and analyzed
           </script>
+
+          <aside class="notes">
+            We currently support 13 vendors and 16 products. Some of
+            them are in beta stage, so you won't see them in the public web site.
+
+            Thanks to the contribution of more than twelve hundreds
+            user accounts, we have collected more than twelve thousands
+            distinct APKs, including both benign and malicious ones.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -614,6 +879,13 @@ Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
             * NortonMobile - Norton Security & Antivirus 3.2.0.769
             * NortonMobile - Norton Security & Antivirus 3.3.4.970
           </script>
+
+          <aside class="notes">
+            Here is the list of vendors that are enabled on the public
+            interface of AndroTotal.
+
+            You can see that we support multiple versions of each vendor.
+          </aside>
         </section>
 
         <section>
@@ -639,6 +911,18 @@ Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
               <tr><td>AndroidOS Opfake.CTC                 </td><td>386 </td></tr>
             </tbody>
           </table>
+
+          <aside class="notes">
+            Among the malicious or potentially harmful applications, here we
+            can see the most popular labels.
+
+            However, as it always happens with malware labeling, the
+            same sample can be given different labels from different
+            vendors. This is a minor issue, but it's quite annoying when
+            we need to correlate results from different scanners.
+
+            Our group has done some research on malware labeling in the past.
+          </aside>
         </section>
 
         <section>
@@ -657,6 +941,32 @@ Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
               <li class="fragments">Open malware repository and API: <strong>anyone interested?</strong></li>
             </ul>
           </script>
+
+          <aside class="notes">
+            Here is what we're planning for the future.
+
+            From a technical point of view, our workers can barely
+            keep the pace, so we would like to add more hardware to
+            scale.
+
+            Next, I'm working on cross-checking the labels assigned by
+            the vendors supported from both VirusTotal and AndroTotal.
+
+            Another interesting direction is the deployment of
+            physical workers on ARM boards, to gather data that cannot
+            be obtained from the emulator. An example is the amount of
+            battery power consumed by each antimalware. Battery is an
+            extremely important resource, and I'd say that it is also
+            a barrier that may limit the adoption of sophisticated
+            antimalware products because, despite their efficiency,
+            they may consume too much battery power.
+
+            Last, we're collecting a list of people, institutions,
+            companies, vendors, interested in participating into a
+            cooperative repository for Android malware collection,
+            available for no-profit purposes such as academic
+            research.
+          </aside>
         </section>
 
         <section data-markdown>
@@ -701,7 +1011,7 @@ Scan response: {"resource": "ec5b3c94ed624d6993b52a50d63153fa"}
       { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
       { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
       { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-      // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+      //{ src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
       // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
       ]
       });
